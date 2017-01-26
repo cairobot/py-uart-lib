@@ -20,10 +20,10 @@
 
 int serial_port_init(struct serial_port *sp, const char *name) {
         int namelen = strlen(name);
-        memset(sp, 0, sizeof(*sp));
+        memset(sp, 0, sizeof(struct serial_port));
 
 
-        sp->d_name = malloc(namelen * sizeof(char));
+        sp->d_name = malloc((namelen + 1) * sizeof(char));
         if (sp->d_name == NULL) {
                 errno = ENOMEM;
                 return SP_NOK;
@@ -31,7 +31,7 @@ int serial_port_init(struct serial_port *sp, const char *name) {
 
         memcpy(sp->d_name, name, namelen);
         sp->d_name[namelen] = 0;
-        memset(&sp->tty, 0, sizeof(sp->tty));
+        memset(&sp->tty, 0, sizeof(struct termios));
         
         sp->fd = open(sp->d_name, O_RDWR | O_NOCTTY | O_SYNC);
         // sp->fd = open(sp->d_name, O_RDWR);
